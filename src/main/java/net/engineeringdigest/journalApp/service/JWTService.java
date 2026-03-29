@@ -25,12 +25,12 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         Map<String,Object> claims=new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)
                 //.addClaims(claims)
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(getkey())

@@ -35,13 +35,10 @@ public class SecurityConfig {
                 .cors().and()
                 .authorizeRequests()
 //            .antMatchers("**/register/**", "/login").permitAll()
-                .antMatchers("/admin/registerA", "/admin/register", "/admin/login").permitAll()
+                .antMatchers("**/registerA/**", "**/register/**", "**/login/**").permitAll()
                 .antMatchers("/User/**").hasAnyRole("USER")
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
-//    Role	/user/**	/admin/**
-//    USER	    ✅	      ❌
-//    ADMIN	    ✅	      ✅
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

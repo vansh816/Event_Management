@@ -3,7 +3,10 @@ package net.engineeringdigest.journalApp.Repository;
 import net.engineeringdigest.journalApp.entity.Users;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.Optional;
+
 
 public interface UserRepo extends MongoRepository<Users, String> {
-    Users findByUsername(String username);
+     Optional<Users> findByEmail(String email);
+
 }

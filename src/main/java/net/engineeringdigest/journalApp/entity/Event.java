@@ -9,19 +9,16 @@ import java.util.Date;
 @Document(collection = "Event")
 @Data
 public class Event{//MODEL
-
+//    private ObjectId userid;
     private String event_name;
     @Id
     private ObjectId _id;
-    private String event_id;
-    private String manager_name;
-    private String manager_id;
     private String organiser_name;
-    private String organizer_id;
-    private String date; //date aur time apne aap set hone chaiye
+    LocalDate today = LocalDate.now(); //date aur time apne aap set honge
     @Indexed(unique = true) //Email can't be same for two organiser
     private String organiseremail;
     private String organiser_phn;
     private String location;
     private Integer price;
+    private Integer expected_guests;
   }

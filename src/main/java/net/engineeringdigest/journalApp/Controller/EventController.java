@@ -1,14 +1,20 @@
 package net.engineeringdigest.journalApp.Controller;
+import net.engineeringdigest.journalApp.EventPayment.EventPayment;
 import net.engineeringdigest.journalApp.Repository.EventRepository;
+import net.engineeringdigest.journalApp.Repository.UserRepo;
 import net.engineeringdigest.journalApp.entity.Event;
 import net.engineeringdigest.journalApp.entity.Users;
 import net.engineeringdigest.journalApp.service.EventService;
 import net.engineeringdigest.journalApp.service.UserService;
+import org.apache.catalina.User;
 import org.bson.types.ObjectId;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.util.Instantiator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +33,10 @@ public class EventController {
     private UserService userService;
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private EventPayment eventPayment;
+    @Autowired
+    private UserRepo userrepo;
 
     @GetMapping("/admin/get")//Admin ke liye
     public ResponseEntity<?> getallevents(){
@@ -37,86 +47,88 @@ public class EventController {
         else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/user/{email}")//USER apna event nikal skta h email se
-    public ResponseEntity<Event> getOrganiserbyemail(@PathVariable String email){
-    Event old=eventRepository.findByOrganiseremail(email).orElse(null);
-    if(old!=null){
-        System.out.println("Event Found");
-        return new ResponseEntity<>(old,HttpStatus.OK);
-    }
-    else {
-        System.out.println("Event Not Found");
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    }
+    @GetMapping("/user")//USER apna event nikal skta h email se
+    public ResponseEntity<?> getOrganiserbyemail(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //  Logged in user fetch
+        String email = auth.getName();
+     Event old=eventRepository.findByOrganiseremail(email).orElse(null);
+    if(old==null){
+        return new ResponseEntity<>("event not found",HttpStatus.OK);}
+        return new ResponseEntity<>(old, HttpStatus.OK);}
 
-    @GetMapping("/user/id/{myid}")//User also see his/her event with id
-    public ResponseEntity<Event> getEventDetailsbyid(@PathVariable ObjectId myid){
-        Event old= eventService.findByid(myid).orElse(null);
-        if(old!=null){
-            System.out.println("Event found");
-            return new ResponseEntity<>(old,HttpStatus.OK);
+    @PostMapping("/User/book")
+    public ResponseEntity<?> bookevent(@RequestBody Event newevent){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();//logged-in user ka email
+        String email = authentication.getName();
+        Users user = userrepo.findByEmail(email).orElse(null);
+        if(user == null){
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
-        else {
-            System.out.println("Event Not Found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
-    }
-
-  @PostMapping("/User/book")//User event book krega
-    public ResponseEntity<Event> bookevent(@RequestBody Event newevent){
-           Event old=eventRepository.findBydate(newevent.getDate()).orElse(null);
-           Event old1=eventRepository.findByOrganiseremail(newevent.getOrganiseremail()).orElse(null);
-           //double booking check hogyi
-      if(available_events<=1000){
-               if(old!=null && old1!=null){
-               System.out.println("Event already Exist");
-               return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-               }
-               else{
-              available_events=available_events-1;
-              count++;
-               return new ResponseEntity<>(HttpStatus.OK);
-               }}
-      else{ System.out.println("Events are full");
-          return new ResponseEntity<>(HttpStatus.NO_CONTENT);}
-    }
-    @PutMapping("/User/id/{myid}")//User id aur email dono se change kr skta h
-    public ResponseEntity<Event> update(@RequestBody Event newevent,@PathVariable ObjectId myid){
-        Event old=eventService.findByid(myid).orElse(null);
-        if(old!=null){
-            old.setEvent_id(newevent.getEvent_id()!=null && !newevent.getEvent_id().equals("")?newevent.getEvent_id(): old.getEvent_id());
-            old.setEvent_name(newevent.getEvent_name()!=null && !newevent.getEvent_name().isEmpty()?newevent.getEvent_name(): old.getEvent_name());
-            old.setLocation(newevent.getLocation()!=null && !newevent.getLocation().isEmpty()?newevent.getLocation(): old.getLocation());
-            old.setPrice(newevent.getPrice()!=null && !newevent.getPrice().equals("")?newevent.getPrice(): old.getPrice());
-            old.setManager_name(newevent.getManager_name()!=null && !newevent.getManager_name().isEmpty()?newevent.getManager_name(): old.getManager_name());
-            old.setManager_id(newevent.getManager_id()!=null && !newevent.getManager_id().equals("")?newevent.getManager_id(): old.getManager_id());
-            old.setOrganiser_name(newevent.getOrganiser_name()!=null && !newevent.getOrganiser_name().isEmpty()?newevent.getOrganiser_name(): old.getOrganiser_name());
-            old.setOrganiser_phn(newevent.getOrganiser_phn()!=null && !newevent.getOrganiser_phn().isEmpty()?newevent.getOrganiser_phn(): old.getOrganiser_phn());
-            old.setOrganiseremail(newevent.getOrganiseremail()!=null && !newevent.getOrganiseremail().isEmpty()?newevent.getOrganiseremail(): old.getOrganiseremail());
-           // old.setTotal_seats(newevent.getTotal_seats()!=null && !newevent.getTotal_seats().equals("")?newevent.getTotal_seats(): old.getTotal_seats());
-            old.setOrganizer_id(newevent.getOrganizer_id()!=null && !newevent.getOrganizer_id().equals("")?newevent.getOrganizer_id(): old.getOrganizer_id());
-            eventService.createEvent(old);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
-            System.out.println("Event Not Found");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Event oldByDate = eventRepository.findByToday(newevent.getToday()).orElse(null);
+        Event oldByEmail = eventRepository.findByOrganiseremail(newevent.getOrganiseremail()).orElse(null);
+        if(available_events <= 1000){
+            if(oldByDate!=null&& oldByEmail != null){
+                return new ResponseEntity<>("event already exist", HttpStatus.CONFLICT);
+            }
+            if(newevent.getOrganiseremail().equals(email)){  // ownership check
+                System.out.println("event found");
+                eventPayment.setPayment_Status("true");
+                eventPayment.setBooking_Status("true");
+                eventRepository.save(newevent);
+                available_events--;
+                count++;
+                return new ResponseEntity<>(newevent, HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>("unauthorised", HttpStatus.UNAUTHORIZED);
+            }
+        } else {
+            return new ResponseEntity<>("Events are full", HttpStatus.BAD_REQUEST);
         }
     }
-
-    @DeleteMapping("/user/id/{myid}")//User aur admin dono ke liye
+    @PutMapping("/User/update/{myid}") // User id aur email dono se change kr skta h
+    public ResponseEntity<?> update(@RequestBody Event newevent, @PathVariable ObjectId myid){
+        Event old=eventService.findByid(myid).orElse(null);//Event fetch
+        if(old == null){
+            return new ResponseEntity<>("Event Not Found", HttpStatus.NOT_FOUND);
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //  Logged in user fetch
+        String email = auth.getName();
+        Users user = userrepo.findByEmail(newevent.getOrganiseremail()).orElse(null);
+        if(!old.getOrganiseremail().equals(email)){// Ownership check
+            return new ResponseEntity<>("Unauthorized: You are not the owner", HttpStatus.UNAUTHORIZED);
+        }
+        else{
+        old.setEvent_name(newevent.getEvent_name() != null && !newevent.getEvent_name().isEmpty() ? newevent.getEvent_name() : old.getEvent_name());
+        old.setLocation(newevent.getLocation() != null && !newevent.getLocation().isEmpty() ? newevent.getLocation() : old.getLocation());
+        old.setPrice(newevent.getPrice() != null ? newevent.getPrice() : old.getPrice());
+        old.setOrganiser_name(newevent.getOrganiser_name() != null && !newevent.getOrganiser_name().isEmpty() ? newevent.getOrganiser_name() : old.getOrganiser_name());
+        old.setOrganiser_phn(newevent.getOrganiser_phn() != null && !newevent.getOrganiser_phn().isEmpty() ? newevent.getOrganiser_phn() : old.getOrganiser_phn());
+        old.setOrganiseremail(newevent.getOrganiseremail() != null && !newevent.getOrganiseremail().isEmpty() ? newevent.getOrganiseremail() : old.getOrganiseremail());
+        old.setExpected_guests(newevent.getExpected_guests() != null ? newevent.getExpected_guests() : old.getExpected_guests());
+        eventService.createEvent(old);
+        return new ResponseEntity<>(old, HttpStatus.OK);}
+    }
+    @DeleteMapping("/User/id/{myid}") // User aur admin dono ke liye
     public ResponseEntity<?> delete(@PathVariable ObjectId myid){
-        Event old=eventService.findByid(myid).orElse(null);
-        if(old!=null){
-            System.out.println("Event is Found");
-            eventService.deleteEvent(myid);
-            available_events=available_events+1;
-            count--;
-            System.out.println("Event is deleted");
-            return new ResponseEntity<>(old,HttpStatus.OK);}
-        else {System.out.println("Event Not Found");
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //  Logged in user fetch
+        String email = auth.getName();
+        Event old = eventService.findByid(myid).orElse(null);
+        if(old == null) {
+            return new ResponseEntity<>("event not found",HttpStatus.NO_CONTENT);
+        }
+        if(!old.getOrganiseremail().equals(email)){// Ownership check
+            return new ResponseEntity<>("Unauthorized: You are not the owner", HttpStatus.UNAUTHORIZED);
+        }
+        eventService.deleteEvent(myid);
+        eventPayment.setPayment_Status("false");
+        eventPayment.setBooking_Status("false");
+        available_events = available_events + 1;
+        count--;
+        System.out.println("Event is deleted");
+        return new ResponseEntity<>(old, HttpStatus.OK);
     }
+
     @GetMapping("/admin/total_events")
     public int events(){
         return count;

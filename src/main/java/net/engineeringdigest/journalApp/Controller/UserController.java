@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping()
 public class UserController {
     public BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(8);
 
@@ -54,9 +54,9 @@ public ResponseEntity<Map<String, String>> login(@RequestBody Users user) {
     public List<Users> all(){
         return userService.findall();
     }
-    @DeleteMapping("/{username}")
-    public void deleteuser(@PathVariable String username){
-        Users user=userrepo.findByUsername(username);
+    @DeleteMapping("/{email}")
+    public void deleteuser(@PathVariable String email){
+        Users user=userrepo.findByEmail(email).orElse(null);
          userService.delete(user);
     }
 }
