@@ -34,9 +34,9 @@ public class EventController {
     @Autowired
     private EventRepository eventRepository;
     @Autowired
-    private EventPayment eventPayment;
-    @Autowired
     private UserRepo userrepo;
+    @Autowired
+    private EventPayment eventPayment;
 
     @GetMapping("/admin/get")//Admin ke liye
     public ResponseEntity<?> getallevents(){
@@ -72,8 +72,6 @@ public class EventController {
             }
             if(newevent.getOrganiseremail().equals(email)){  // ownership check
                 System.out.println("event found");
-                eventPayment.setPayment_Status("true");
-                eventPayment.setBooking_Status("true");
                 eventRepository.save(newevent);
                 available_events--;
                 count++;
@@ -106,6 +104,8 @@ public class EventController {
         old.setOrganiser_phn(newevent.getOrganiser_phn() != null && !newevent.getOrganiser_phn().isEmpty() ? newevent.getOrganiser_phn() : old.getOrganiser_phn());
         old.setOrganiseremail(newevent.getOrganiseremail() != null && !newevent.getOrganiseremail().isEmpty() ? newevent.getOrganiseremail() : old.getOrganiseremail());
         old.setExpected_guests(newevent.getExpected_guests() != null ? newevent.getExpected_guests() : old.getExpected_guests());
+        old.setDecoration(newevent.isDecoration());
+        old.setDj_Music(newevent.isDj_Music());
         eventService.createEvent(old);
         return new ResponseEntity<>(old, HttpStatus.OK);}
     }
@@ -121,17 +121,35 @@ public class EventController {
             return new ResponseEntity<>("Unauthorized: You are not the owner", HttpStatus.UNAUTHORIZED);
         }
         eventService.deleteEvent(myid);
-        eventPayment.setPayment_Status("false");
-        eventPayment.setBooking_Status("false");
-        available_events = available_events + 1;
+        available_events++;
         count--;
         System.out.println("Event is deleted");
         return new ResponseEntity<>(old, HttpStatus.OK);
     }
 
     @GetMapping("/admin/total_events")
-    public int events(){
+    public int used_events(){
         return count;
+    }
+    @GetMapping("/admin/rem_events")
+    public int rem_events(){
+        return available_events;
+    }
+    @PostMapping("/User/pay/{_id}")
+    public ResponseEntity<?> pay(@PathVariable ObjectId _id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();//logged-in user ka email
+        String email = authentication.getName();//parvesh
+       Event event = eventRepository.findById(_id).orElse(null);
+        Users user = userrepo.findByEmail(email).orElse(null);//nhi h parvesh
+        if(event == null){
+            return new ResponseEntity<>("Event not found", HttpStatus.NOT_FOUND);
+        }
+        if(!event.getOrganiseremail().equals(email)){// Ownership check
+            return new ResponseEntity<>("Unauthorized: You are not the owner", HttpStatus.UNAUTHORIZED);
+        }
+        eventPayment.setPayment_status(true);//Payment success maan le
+        eventPayment.setBooking_status(true);
+        return new ResponseEntity<>("Payment Done & Booking Confirmed", HttpStatus.OK);
     }
 //    @PostMapping("/admin/login")
 //    public ResponseEntity<Map<String, String>> login(@RequestBody Users user) {

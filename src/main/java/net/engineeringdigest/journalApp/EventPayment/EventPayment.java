@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 public class EventPayment {
 
     private boolean payment=false;
-    String Payment_Status="not done";
-    String Booking_Status="not done";
+   private boolean payment_status=false;
+   private boolean booking_status=false;
 
 
 
