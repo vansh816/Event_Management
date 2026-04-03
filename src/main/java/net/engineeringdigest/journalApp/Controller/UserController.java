@@ -1,4 +1,6 @@
 package net.engineeringdigest.journalApp.Controller;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.engineeringdigest.journalApp.Repository.UserRepo;
 import net.engineeringdigest.journalApp.entity.Users;
 import net.engineeringdigest.journalApp.service.UserService;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping()
+@Tag(name = "Authentication & Authorization")
 public class UserController {
     public BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(8);
 
@@ -23,12 +26,14 @@ public class UserController {
     private UserRepo userrepo;
 
     @PostMapping("/register")
+    @Operation(summary = "Only User can register")
     public Users register(@RequestBody Users user){
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRoles("USER");
        return  userService.create(user);
     }
     @PostMapping("/registerA")
+    @Operation(summary = "Only Admin can register")
     public Users registerA(@RequestBody Users user){
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRoles("ADMIN");
@@ -39,6 +44,7 @@ public class UserController {
 //        return userService.verify(user);
 //    }
 @PostMapping("/login") /// ///mera nhi h
+@Operation(summary = "Both User and Admin can Login")
 public ResponseEntity<Map<String, String>> login(@RequestBody Users user) {
     String token = userService.verify(user);
 
@@ -50,11 +56,8 @@ public ResponseEntity<Map<String, String>> login(@RequestBody Users user) {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
-    @GetMapping("/all-user")
-    public List<Users> all(){
-        return userService.findall();
-    }
     @DeleteMapping("/{email}")
+    @Operation(summary = "Delete User and Admin by Email")
     public void deleteuser(@PathVariable String email){
         Users user=userrepo.findByEmail(email).orElse(null);
          userService.delete(user);

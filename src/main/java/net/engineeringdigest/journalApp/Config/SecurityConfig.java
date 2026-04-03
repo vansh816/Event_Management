@@ -1,4 +1,5 @@
 package net.engineeringdigest.journalApp.Config;
+import net.engineeringdigest.journalApp.Filter.JwtAuthFilter;
 import net.engineeringdigest.journalApp.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +11,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,21 +30,27 @@ import java.util.List;
 public class SecurityConfig {
     @Autowired
     private MyUserDetailsService userDetailsService;
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter; // ✅ add karo upar
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().and()
+                //.cors().and()
                 .authorizeRequests()
-//            .antMatchers("**/register/**", "/login").permitAll()
-                .antMatchers("**/registerA/**", "**/register/**", "**/login/**").permitAll()
+                .antMatchers("/registerA/**", "/register/**", "/login/**").permitAll()
                 .antMatchers("/User/**").hasAnyRole("USER")
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic().disable()
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter .class); // ✅ JWT on
+
         return http.build();
     }
     @Bean
@@ -56,20 +65,35 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+//    @Configuration
+//    public class WebConfig {
+//        @Bean
+//        public WebMvcConfigurer corsConfigurer() {
+//            return new WebMvcConfigurer() {
+//                @Override
+//                public void addCorsMappings(CorsRegistry registry) {
+//                    registry.addMapping("/**")
+//                            .allowedOrigins("http://localhost:3000") // Frontend URL
+//                            .allowedMethods("GET", "POST", "PUT", "DELETE")
+//                            .allowedHeaders("*")
+//                            .allowCredentials(true);
+//                }
+//
+//            };
+//        }
+//    }
     @Configuration
-    public class WebConfig {
+    public class CorsConfig {
         @Bean
         public WebMvcConfigurer corsConfigurer() {
             return new WebMvcConfigurer() {
                 @Override
                 public void addCorsMappings(CorsRegistry registry) {
                     registry.addMapping("/**")
-                            .allowedOrigins("http://localhost:3000") // Frontend URL
-                            .allowedMethods("GET", "POST", "PUT", "DELETE")
-                            .allowedHeaders("*")
-                            .allowCredentials(true);
+                            .allowedOrigins("http://localhost:3000")
+                            .allowedMethods("*")
+                    .allowedHeaders("*");
                 }
-
             };
         }
     }
