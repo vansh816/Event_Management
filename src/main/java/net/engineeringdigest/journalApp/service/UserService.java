@@ -37,7 +37,5 @@ public class UserService {
     public void delete(Users user){
          userRepo.delete(user);
     }
-//    public Optional<Users> find(String username){
-//        return userRepo.findBy(username);
-//    }
+
 }

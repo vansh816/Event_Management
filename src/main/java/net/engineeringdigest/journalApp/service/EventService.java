@@ -16,8 +16,7 @@ public class EventService {
 
     @Autowired
     private EventRepository eventRepository;
-//    @Autowired
-//    private EventPayment eventPayment;
+
     public List<Event> getAll(){
         return eventRepository.findAll();
     }

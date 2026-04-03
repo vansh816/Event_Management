@@ -39,11 +39,7 @@ public class UserController {
         user.setRoles("ADMIN");
         return  userService.create(user);
     }
-//    @PostMapping("/login")/////// mera h
-//    public String login(@RequestBody Users user){
-//        return userService.verify(user);
-//    }
-@PostMapping("/login") /// ///mera nhi h
+@PostMapping("/login")
 @Operation(summary = "Both User and Admin can Login")
 public ResponseEntity<Map<String, String>> login(@RequestBody Users user) {
     String token = userService.verify(user);
