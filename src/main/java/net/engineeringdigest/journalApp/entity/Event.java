@@ -16,6 +16,7 @@ import java.util.Date;
 @Data
 @NotEmpty
 public class Event{//MODEL
+
     @Id
     private ObjectId _id;
    // @Schema(description = "name") swagger mei dikhega

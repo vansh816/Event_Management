@@ -10,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @Document(collection = "Users")
 @Data
 public class Users {
+
     @Id
     private ObjectId user_id;
     @NotEmpty

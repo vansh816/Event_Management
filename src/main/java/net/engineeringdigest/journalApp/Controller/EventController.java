@@ -78,7 +78,8 @@ public class EventController {
 
             else{
                 return new ResponseEntity<>("unauthorised", HttpStatus.UNAUTHORIZED);}
-        }}
+        }
+        }
         else {
             return new ResponseEntity<>("Events are full", HttpStatus.BAD_REQUEST);}
     }

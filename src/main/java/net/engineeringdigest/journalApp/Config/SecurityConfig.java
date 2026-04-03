@@ -37,7 +37,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                //.cors().and()
                 .authorizeRequests()
                 .antMatchers("/registerA/**", "/register/**", "/login/**").permitAll()
                 .antMatchers("/User/**").hasAnyRole("USER")

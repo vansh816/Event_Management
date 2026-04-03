@@ -57,5 +57,4 @@ public ResponseEntity<Map<String, String>> login(@RequestBody Users user) {
     public void deleteuser(@PathVariable String email){
         Users user=userrepo.findByEmail(email).orElse(null);
          userService.delete(user);
-    }
-}
+    }}

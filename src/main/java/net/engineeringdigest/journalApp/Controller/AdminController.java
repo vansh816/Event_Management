@@ -51,14 +51,7 @@ public class AdminController {
     public int rem_events(){
         return eventController.available_events;
     }
-//    @GetMapping("/user")//user aur admin dono event nikal skta h email se
-//    public ResponseEntity<?> getOrganiserbyemail(){
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //  Logged in user fetch
-//        String email = auth.getName();
-//        Event old=eventRepository.findByOrganiseremail(email).orElse(null);
-//        if(old==null){
-//            return new ResponseEntity<>("event not found",HttpStatus.OK);}
-//        return new ResponseEntity<>(old, HttpStatus.OK);}
+
 @GetMapping("admin/all-user")//Admin dekh skta h users ko
 @Operation(summary = "Get All Users in the System")
 public List<Users> all(){
