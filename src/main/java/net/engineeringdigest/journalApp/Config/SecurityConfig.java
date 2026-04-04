@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp.Config;
+package net.engineeringdigest.project.journalApp.Config;
 import net.engineeringdigest.journalApp.Filter.JwtAuthFilter;
 import net.engineeringdigest.journalApp.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
