@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp.Config;
+package net.engineeringdigest.project.journalApp.Config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
