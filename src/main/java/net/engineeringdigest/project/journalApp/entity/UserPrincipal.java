@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp.entity;
+package net.engineeringdigest.project.journalApp.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

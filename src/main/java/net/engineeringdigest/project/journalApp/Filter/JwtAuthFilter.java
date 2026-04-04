@@ -1,8 +1,8 @@
-package net.engineeringdigest.journalApp.Filter;
+package net.engineeringdigest.project.journalApp.Filter;
 
 import io.jsonwebtoken.io.IOException;
-import net.engineeringdigest.journalApp.service.JWTService;
-import net.engineeringdigest.journalApp.service.MyUserDetailsService;
+import net.engineeringdigest.project.journalApp.service.JWTService;
+import net.engineeringdigest.project.journalApp.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp.service;
+package net.engineeringdigest.project.journalApp.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

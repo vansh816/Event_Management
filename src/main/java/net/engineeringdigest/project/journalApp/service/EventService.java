@@ -1,9 +1,9 @@
-package net.engineeringdigest.journalApp.service;
+package net.engineeringdigest.project.journalApp.service;
 
 
 //import net.engineeringdigest.journalApp.EventPayment.EventPayment;
-import net.engineeringdigest.journalApp.Repository.EventRepository;
-import net.engineeringdigest.journalApp.entity.Event;
+import net.engineeringdigest.project.journalApp.Repository.EventRepository;
+import net.engineeringdigest.project.journalApp.entity.Event;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

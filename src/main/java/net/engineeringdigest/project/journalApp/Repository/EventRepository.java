@@ -1,6 +1,6 @@
-package net.engineeringdigest.journalApp.Repository;
+package net.engineeringdigest.project.journalApp.Repository;
 
-import net.engineeringdigest.journalApp.entity.Event;
+import net.engineeringdigest.project.journalApp.entity.Event;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.mongodb.repository.MongoRepository;

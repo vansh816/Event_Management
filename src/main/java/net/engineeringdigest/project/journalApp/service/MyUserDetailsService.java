@@ -1,7 +1,7 @@
-package net.engineeringdigest.journalApp.service;
-import net.engineeringdigest.journalApp.Repository.UserRepo;
-import net.engineeringdigest.journalApp.entity.UserPrincipal;
-import net.engineeringdigest.journalApp.entity.Users;
+package net.engineeringdigest.project.journalApp.service;
+import net.engineeringdigest.project.journalApp.Repository.UserRepo;
+import net.engineeringdigest.project.journalApp.entity.UserPrincipal;
+import net.engineeringdigest.project.journalApp.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

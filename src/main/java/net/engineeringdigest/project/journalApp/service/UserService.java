@@ -1,6 +1,6 @@
-package net.engineeringdigest.journalApp.service;
-import net.engineeringdigest.journalApp.Repository.UserRepo;
-import net.engineeringdigest.journalApp.entity.Users;
+package net.engineeringdigest.project.journalApp.service;
+import net.engineeringdigest.project.journalApp.Repository.UserRepo;
+import net.engineeringdigest.project.journalApp.entity.Users;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

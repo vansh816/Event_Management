@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp.EventPayment;
+package net.engineeringdigest.project.journalApp.EventPayment;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 @Component

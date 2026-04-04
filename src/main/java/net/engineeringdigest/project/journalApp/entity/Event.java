@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp.entity;
+package net.engineeringdigest.project.journalApp.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NonNull;

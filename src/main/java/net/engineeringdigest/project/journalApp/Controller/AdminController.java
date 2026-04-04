@@ -1,12 +1,12 @@
-package net.engineeringdigest.journalApp.Controller;
+package net.engineeringdigest.project.journalApp.Controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.engineeringdigest.journalApp.Repository.EventRepository;
-import net.engineeringdigest.journalApp.entity.Event;
-import net.engineeringdigest.journalApp.entity.Users;
-import net.engineeringdigest.journalApp.service.EventService;
-import net.engineeringdigest.journalApp.service.UserService;
+import net.engineeringdigest.project.journalApp.Repository.EventRepository;
+import net.engineeringdigest.project.journalApp.entity.Event;
+import net.engineeringdigest.project.journalApp.entity.Users;
+import net.engineeringdigest.project.journalApp.service.EventService;
+import net.engineeringdigest.project.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
