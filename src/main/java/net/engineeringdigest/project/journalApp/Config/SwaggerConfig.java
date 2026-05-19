@@ -1,0 +1,30 @@
+package net.engineeringdigest.project.journalApp.Config;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwaggerConfig {
+    @Bean
+    public OpenAPI myCustomConfig(){
+        return  new OpenAPI().info(
+                        new Info().title("Event Booking")
+                                .description("Built a secure Event Booking Backend (RESTFULL APIs) " +
+                                        "using Spring Boot with JWT authentication, where users can book " +
+                                        "events with proper authorization and MongoDB integration.  "   +
+                                        "by VANSH SHARMA")
+                )
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new Components().addSecuritySchemes("bearerAuth",
+                        new SecurityScheme().type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .in(SecurityScheme.In.HEADER)
+                                .name("Authorization")
+                ));
+    }}
+//AIzaSyBRT4M3VQ3_nRDupFeY1pReSVq971RTAps
