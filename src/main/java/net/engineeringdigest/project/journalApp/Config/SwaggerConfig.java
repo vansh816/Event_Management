@@ -13,7 +13,7 @@ public class SwaggerConfig {
     public OpenAPI myCustomConfig(){
         return  new OpenAPI().info(
                         new Info().title("Event Booking")
-                                .description("Built a secure Event Booking Backend (RESTFULL APIs) " +
+                                .description("Built a secure AI-Event Booking Backend (RESTFULL APIs) System" +
                                         "using Spring Boot with JWT authentication, where users can book " +
                                         "events with proper authorization and MongoDB integration.  "   +
                                         "by VANSH SHARMA")
