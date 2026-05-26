@@ -175,6 +175,7 @@ public class ChatService {
                         + "- If user asks recommendations -> suggest useful services naturally\n"
                         + "- If exact event not in database -> still help user professionally\n"
                         + "- Never refuse event planning questions\n\n"
+                        + "- answer in pointwise not in paragraph\n\n"
 
                         + "STRICT RESPONSE RULES:\n"
                         + "- NEVER say:\n"
