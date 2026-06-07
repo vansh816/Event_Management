@@ -20,7 +20,7 @@ public class ChatService {
 
     @Autowired
     private EventRepository eventRepository;
-    @Value("${OPENROUTER_API_KEY}")
+    @Value("${openrouter.api.key}")
     private String apiKey;
 
     public String chatWithEvents(String userQuestion) throws Exception {

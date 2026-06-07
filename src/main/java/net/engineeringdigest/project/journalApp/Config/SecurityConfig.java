@@ -35,11 +35,10 @@ public class SecurityConfig {
                 .antMatchers("/User/**").hasAnyRole("USER")
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
-                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers(
                         "/chat/**",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/swagger-ui/**", "/swagger-ui.html",
+                        "/v3/api-docs/**","/", "/auth/**"
                 ).permitAll()
 
                 .anyRequest().authenticated()
