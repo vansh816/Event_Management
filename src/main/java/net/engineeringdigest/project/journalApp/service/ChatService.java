@@ -1,9 +1,6 @@
 package net.engineeringdigest.project.journalApp.service;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
-
 import net.engineeringdigest.project.journalApp.Repository.EventRepository;
 import net.engineeringdigest.project.journalApp.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,45 +8,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
-
 
 @Service
 public class ChatService {
-
     @Autowired
     private EventRepository eventRepository;
     @Value("${openrouter.api.key}")
     private String apiKey;
-
     public String chatWithEvents(String userQuestion) throws Exception {
-
         String lowerQuestion = userQuestion.toLowerCase();
-
         List<Event> events;
 
         // SMART FILTERING
-
         if (lowerQuestion.contains("birthday")) {
-
-            events = eventRepository
-                    .findByEventnameContainingIgnoreCase("birthday");
-
+            events = eventRepository.findByEventnameContainingIgnoreCase("birthday");
         } else if (lowerQuestion.contains("wedding")
                 || lowerQuestion.contains("marriage")
                 || lowerQuestion.contains("reception")) {
-
-            events = eventRepository
-                    .findByEventnameContainingIgnoreCase("wedding");
-
-        } else if (lowerQuestion.contains("dj")) {
-
-            events = eventRepository
-                    .findByEventnameContainingIgnoreCase("dj");
-
+            events = eventRepository.findByEventnameContainingIgnoreCase("wedding");
+        } else if (lowerQuestion.contains("dj")) {events = eventRepository.findByEventnameContainingIgnoreCase("dj");
         } else if (lowerQuestion.contains("photography")) {
-
             events = eventRepository
                     .findByEventnameContainingIgnoreCase("photography");
 
@@ -209,19 +188,12 @@ public class ChatService {
                         + "- Never generate random budgets";
 
         String url = "https://openrouter.ai/api/v1/chat/completions";
-
         HttpHeaders headers = new HttpHeaders();
-
         headers.set("Authorization", "Bearer " + apiKey);
-
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         headers.set("HTTP-Referer", "http://localhost:8080");
-
         headers.set("X-Title", "event-management");
-
-        String escapedPrompt =
-                finalPrompt.replace("\"", "\\\"")
+        String escapedPrompt = finalPrompt.replace("\"", "\\\"")
                         .replace("\n", "\\n");
 
         String body =
@@ -243,7 +215,6 @@ public class ChatService {
                 new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-
         ResponseEntity<String> response =
                 restTemplate.exchange(
                         url,
@@ -253,12 +224,8 @@ public class ChatService {
                 );
 
         ObjectMapper mapper = new ObjectMapper();
-
-        JsonNode root =
-                mapper.readTree(response.getBody());
-
-        return root
-                .get("choices")
+        JsonNode root = mapper.readTree(response.getBody());
+        return root.get("choices")
                 .get(0)
                 .get("message")
                 .get("content")
